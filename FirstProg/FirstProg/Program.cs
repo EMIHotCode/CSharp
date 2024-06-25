@@ -14,7 +14,7 @@ namespace FirstProg
             int a = Convert.ToInt32(Console.ReadLine());
             int b, c, d;
             Console.WriteLine("A = " + a + b + c + d);
-            Console.ReadKey();
+            Console.ReadKey("hack");
 
 
         }
