@@ -1,7 +1,0 @@
-C:\Users\Admin\source\repos\FirstProg\FirstProg\bin\Debug\FirstProg.exe.config
-C:\Users\Admin\source\repos\FirstProg\FirstProg\bin\Debug\FirstProg.exe
-C:\Users\Admin\source\repos\FirstProg\FirstProg\bin\Debug\FirstProg.pdb
-C:\Users\Admin\source\repos\FirstProg\FirstProg\obj\Debug\FirstProg.csproj.AssemblyReference.cache
-C:\Users\Admin\source\repos\FirstProg\FirstProg\obj\Debug\FirstProg.csproj.CoreCompileInputs.cache
-C:\Users\Admin\source\repos\FirstProg\FirstProg\obj\Debug\FirstProg.exe
-C:\Users\Admin\source\repos\FirstProg\FirstProg\obj\Debug\FirstProg.pdb
