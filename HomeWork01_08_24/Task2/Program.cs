@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations; // Валидация. Обозреватель решений -> ссылки -> добавить System.ComponentModel.DataAnnotations
 
 namespace Programm
 {
@@ -21,19 +21,22 @@ namespace Programm
             Array = array;
         }
 
-        public void WorkWithArray()
+        public void WorkWihtArray()
         {
             Console.WriteLine($" {isValidArray(Array)}");
 
-            IEnumerable<int> arreyForWork = from i in Array
-                                            where i % 2 != 0
-                                            select i;
-            Array = arreyForWork.ToArray();
-            Console.Write($"Все нечетные числа массива      : ");
+            IEnumerable<int> workArray = from i in Array
+                                         where i > 0
+                                         where i.ToString().Length == 2
+                                         select i;
+            Array = workArray.ToArray();
+            Console.Write($"Положительные двузначные числа  : ");
             Show();
 
-            int[] result = arreyForWork.Take(1).Concat(arreyForWork.Skip(1).Distinct()).ToArray();
-            Array = result;
+            workArray = from i in Array
+                        orderby i
+                        select i;
+            Array = workArray.ToArray();
         }
 
         public void Show()
@@ -113,9 +116,7 @@ namespace Programm
     {
         static void Menu()
         {
-            Console.WriteLine($"\nTask 1 \nДана целочисленная последовательность. " +
-                $"Извлечь из нее все нечетные числа, сохранив \nих исходный порядок" +
-                $" следования и удалив все вхождения повторяющихся элементов, кроме первых.\n\n");
+            Console.WriteLine($"\nTask 2 \nДана целочисленная последовательность. \nИзвлечь из нее все положительные двузначные числа, отсортировав их по возрастанию.\n\n");
             Console.WriteLine("\t\tМеню");
             Console.WriteLine("1. Использовать заранее подготовленный массив целых чисел");
             Console.WriteLine("2. Ввести числа в массив вручную");
@@ -136,16 +137,16 @@ namespace Programm
                 {
                     case 1:
 
-                        int[] array = { 2, 7, 88, -10, 15, 20, 12, -3, 0, 62, 5, -11, 7, 15, 5 };
+                        int[] array = { 200, 100, 99, 20, 45, 9, 0, -1, -20, -100 };
                         WorkWithIntArray workArray = new WorkWithIntArray(array);
 
                         Console.Write("\nМассив для примера              : ");
                         workArray.Show();
                         Console.WriteLine();
 
-                        workArray.WorkWithArray();
+                        workArray.WorkWihtArray();
 
-                        Console.Write("\nУдалены одинаковые кроме первого: ");
+                        Console.Write("\nСортировка по возрастанию       : ");
                         workArray.Show();
 
                         break;
@@ -158,9 +159,9 @@ namespace Programm
                         userArray.Show();
                         Console.WriteLine();
 
-                        userArray.WorkWithArray();
+                        userArray.WorkWihtArray();
 
-                        Console.Write("\nУдалены одинаковые кроме первого: ");
+                        Console.Write("\nСортировка по возрастанию       : ");
                         userArray.Show();
 
                         break;

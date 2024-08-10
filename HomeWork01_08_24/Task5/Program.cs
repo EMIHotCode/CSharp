@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations; // обозреватель решений -> ссылки -> добавить System.ComponentModel.DataAnnotations
+using System.Net.Mail;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Programm
 {
@@ -21,19 +23,26 @@ namespace Programm
             Array = array;
         }
 
-        public void WorkWithArray()
+        public void WorkWihtArray()
         {
             Console.WriteLine($" {isValidArray(Array)}");
 
             IEnumerable<int> arreyForWork = from i in Array
-                                            where i % 2 != 0
+                                            where i > 0
                                             select i;
             Array = arreyForWork.ToArray();
-            Console.Write($"Все нечетные числа массива      : ");
+            Console.Write($"Положительные числа массива     : ");
+            Show();
+            Console.WriteLine();
+
+            arreyForWork = from i in Array
+                           select i % 10;
+            Array = arreyForWork.ToArray();
+            Console.Write($"Последние цифры чисел           : ");
             Show();
 
             int[] result = arreyForWork.Take(1).Concat(arreyForWork.Skip(1).Distinct()).ToArray();
-            Array = result;
+            Array = result.ToArray();
         }
 
         public void Show()
@@ -89,7 +98,6 @@ namespace Programm
                 }
             }
         }
-
         public static bool isValidArray(int[] Array)
         {
             bool isValid = true;
@@ -113,9 +121,7 @@ namespace Programm
     {
         static void Menu()
         {
-            Console.WriteLine($"\nTask 1 \nДана целочисленная последовательность. " +
-                $"Извлечь из нее все нечетные числа, сохранив \nих исходный порядок" +
-                $" следования и удалив все вхождения повторяющихся элементов, кроме первых.\n\n");
+            Console.WriteLine($"\nTask 5 \nДана целочисленная последовательность.\nОбрабатывая только положительные числа, получить последовательность их последних цифр и удалить \nв полученной последовательности все вхождения одинаковых цифр, кроме первого.\nПорядок полученных цифр должен соответствовать порядку исходных чисел.\n\n");
             Console.WriteLine("\t\tМеню");
             Console.WriteLine("1. Использовать заранее подготовленный массив целых чисел");
             Console.WriteLine("2. Ввести числа в массив вручную");
@@ -136,14 +142,14 @@ namespace Programm
                 {
                     case 1:
 
-                        int[] array = { 2, 7, 88, -10, 15, 20, 12, -3, 0, 62, 5, -11, 7, 15, 5 };
+                        int[] array = { 200, 100, 99, 20, 45, 9, 0, -1, -20, -100 };
                         WorkWithIntArray workArray = new WorkWithIntArray(array);
 
                         Console.Write("\nМассив для примера              : ");
                         workArray.Show();
                         Console.WriteLine();
 
-                        workArray.WorkWithArray();
+                        workArray.WorkWihtArray();
 
                         Console.Write("\nУдалены одинаковые кроме первого: ");
                         workArray.Show();
@@ -158,9 +164,9 @@ namespace Programm
                         userArray.Show();
                         Console.WriteLine();
 
-                        userArray.WorkWithArray();
+                        userArray.WorkWihtArray();
 
-                        Console.Write("\nУдалены одинаковые кроме первого: ");
+                        Console.Write("\nРезультат после изменений       : ");
                         userArray.Show();
 
                         break;

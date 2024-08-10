@@ -3,20 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 
 namespace Programm
 {
-    public class WorkWithIntArray
+    public class WorkWithStringArray
     {
         [Required]
-        [Range(-100000000, 100000000, ErrorMessage = "Числа в массиве должны быть от -100000000 до 100000000.")]
-        public int[] Array;
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Количество букв в строке должно быть от 2 до 50")]
+        public string[] Array;
 
-        public WorkWithIntArray()
+        public WorkWithStringArray()
         {
-            InitialIntArray();
+            InitialStringArray();
         }
-        public WorkWithIntArray(int[] array)
+        public WorkWithStringArray(string[] array)
         {
             Array = array;
         }
@@ -24,16 +25,11 @@ namespace Programm
         public void WorkWithArray()
         {
             Console.WriteLine($" {isValidArray(Array)}");
-
-            IEnumerable<int> arreyForWork = from i in Array
-                                            where i % 2 != 0
-                                            select i;
+            IEnumerable<string> arreyForWork = from i in Array
+                                               orderby i.Length descending, i
+                                               select i;
             Array = arreyForWork.ToArray();
-            Console.Write($"Все нечетные числа массива      : ");
-            Show();
 
-            int[] result = arreyForWork.Take(1).Concat(arreyForWork.Skip(1).Distinct()).ToArray();
-            Array = result;
         }
 
         public void Show()
@@ -46,33 +42,34 @@ namespace Programm
 
             Console.Write($"{str_q}");
         }
-
-        public void InitialIntArray()
+        bool exit = false;
+        public void InitialStringArray()
         {
-            bool exit = false;
             while (!exit)
             {
                 bool exitForeach = false;
-                Console.Write("Вводите числа для создания массива через ПРОБЕЛ: ");
 
-                string foo = Console.ReadLine().Trim();
-                string[] tokens = foo.Split(" ,.:\t*\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                Array = new int[tokens.Length];
-                int oneNum, iteration = 0;
+                Console.Write("Вводите слова для создания массива через ПРОБЕЛ: ");
+
+                string readTerminal = Console.ReadLine().ToUpper().Trim();
+                string[] tokens = readTerminal.Split(" ,.:\t*\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                Array = new string[tokens.Length];
+                int iteration = 0;
 
                 foreach (string s in tokens)
                 {
-                    if (Int32.TryParse(s, out oneNum) && (oneNum > -100000000 && oneNum < 100000000))
+                    if (s.Length >= 2 && s.Length <= 50)
                     {
                         continue;
                     }
                     else
                     {
-                        Console.WriteLine($"\rМассив должен состоять из целых чисел от -100000000 до 100000000");
+                        Console.WriteLine($"\rМассив должен состоять из слов длинной от 2 до 50 символов");
                         exitForeach = true;
                         break;
                     }
                 }
+
                 if (exitForeach == true)
                 {
                     continue;
@@ -80,22 +77,20 @@ namespace Programm
 
                 foreach (string s in tokens)
                 {
-                    if (Int32.TryParse(s, out oneNum))
-                    {
-                        Array[iteration] = oneNum;
-                        iteration++;
-                        exit = true;
-                    }
+                    Array[iteration] = s;
+                    iteration++;
+                    exit = true;
+
                 }
             }
         }
 
-        public static bool isValidArray(int[] Array)
+        public static bool isValidArray(string[] Array)
         {
             bool isValid = true;
-            foreach (int i in Array)
+            foreach (string s in Array)
             {
-                if (i < -100000000 && i > 100000000)
+                if (string.IsNullOrEmpty(s) || s.Length < 2)
                 {
                     isValid = false;
                     break;
@@ -109,13 +104,15 @@ namespace Programm
             return isValid;
         }
     }
+
+
     internal class Program
     {
         static void Menu()
         {
-            Console.WriteLine($"\nTask 1 \nДана целочисленная последовательность. " +
-                $"Извлечь из нее все нечетные числа, сохранив \nих исходный порядок" +
-                $" следования и удалив все вхождения повторяющихся элементов, кроме первых.\n\n");
+            Console.WriteLine($"\nTask 3 \nДана строковая последовательность." +
+                $"\nСтроки последовательности содержат только заглавные буквы латинского алфавита." +
+                $"\nОтсортировать последовательность по возрастанию длин строк, а строки одинаковой длины – по убыванию.\n\n");
             Console.WriteLine("\t\tМеню");
             Console.WriteLine("1. Использовать заранее подготовленный массив целых чисел");
             Console.WriteLine("2. Ввести числа в массив вручную");
@@ -136,8 +133,8 @@ namespace Programm
                 {
                     case 1:
 
-                        int[] array = { 2, 7, 88, -10, 15, 20, 12, -3, 0, 62, 5, -11, 7, 15, 5 };
-                        WorkWithIntArray workArray = new WorkWithIntArray(array);
+                        string[] array = { "ABCD", "ABC", "AB", "WXYZ", "WXY", "WX", "EFGH", "EFG", "EF" };
+                        WorkWithStringArray workArray = new WorkWithStringArray(array);
 
                         Console.Write("\nМассив для примера              : ");
                         workArray.Show();
@@ -145,7 +142,7 @@ namespace Programm
 
                         workArray.WorkWithArray();
 
-                        Console.Write("\nУдалены одинаковые кроме первого: ");
+                        Console.Write("Отсортированный массив          : ");
                         workArray.Show();
 
                         break;
@@ -153,14 +150,14 @@ namespace Programm
 
                     case 2:
 
-                        WorkWithIntArray userArray = new WorkWithIntArray();
-                        Console.Write("\nВаш массив целых чисел          : ");
+                        WorkWithStringArray userArray = new WorkWithStringArray();
+                        Console.Write("\nВаш массив            : ");
                         userArray.Show();
                         Console.WriteLine();
 
                         userArray.WorkWithArray();
 
-                        Console.Write("\nУдалены одинаковые кроме первого: ");
+                        Console.Write("Отсортированный массив: ");
                         userArray.Show();
 
                         break;
