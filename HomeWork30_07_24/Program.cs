@@ -2,6 +2,8 @@
 
 namespace dayOfTheWeek
 {
+    enum DaysString { Понедельник, Вторник, Среда, Четверг, Пятница, Суббота, Воскресенье }
+
     delegate string MyDelegate();
     internal class Program
     {
@@ -10,14 +12,15 @@ namespace dayOfTheWeek
             MyDelegate show;
             bool exit = false;
             int num = -1;
-            string[] days = { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" };
 
             Console.WriteLine("\nНажимайте ПРОБЕЛ для показа дней недели, ESC - Выход: ");
             while (!exit)
             {
                 show = delegate ()  // анонимный метод
                 {
-                    return days[++num % 7];
+                    DaysString days = (DaysString)(++num % 7);
+                    string dayToday = days.ToString();
+                    return dayToday;
                 };
 
                 Console.Write($"\n{num + 2} - й день: {show()}");
