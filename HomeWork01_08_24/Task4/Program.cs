@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
+
 
 namespace Programm
 {
@@ -25,11 +25,8 @@ namespace Programm
         public void WorkWithArray()
         {
             Console.WriteLine($" {isValidArray(Array)}");
-            IEnumerable<string> arreyForWork = from i in Array
-                                               orderby i.Length descending, i
-                                               select i;
+            IEnumerable<string> arreyForWork = (from i in Array select i.First().ToString()).Reverse();
             Array = arreyForWork.ToArray();
-
         }
 
         public void Show()
@@ -49,9 +46,9 @@ namespace Programm
             {
                 bool exitForeach = false;
 
-                Console.Write("Вводите слова для создания массива через ПРОБЕЛ: ");
+                Console.Write("Вводите не пустые строки для создания массива через ПРОБЕЛ: ");
 
-                string readTerminal = Console.ReadLine().ToUpper().Trim();
+                string readTerminal = Console.ReadLine().Trim();
                 string[] tokens = readTerminal.Split(" ,.:\t*\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 Array = new string[tokens.Length];
                 int iteration = 0;
@@ -99,7 +96,7 @@ namespace Programm
                     isValid = true;
 
             }
-            Console.Write($"Валидация введеного массива     :");
+            Console.Write($"Валидация введеного массива              :");
 
             return isValid;
         }
@@ -110,9 +107,9 @@ namespace Programm
     {
         static void Menu()
         {
-            Console.WriteLine($"\nTask 3 \nДана строковая последовательность." +
-                $"\nСтроки последовательности содержат только заглавные буквы латинского алфавита." +
-                $"\nОтсортировать последовательность по возрастанию длин строк, а строки одинаковой длины – по убыванию.\n\n");
+            Console.WriteLine($"\nTask 4 \nДана последовательность непустых строк A.\n" +
+                $"Получить последовательность символов, каждый элемент которой является начальным символом соответствующей строки из A.\n" +
+                $"Порядок символов должен быть обратным по отношению к порядку элементов исходной последовательности.\n\n");
             Console.WriteLine("\t\tМеню");
             Console.WriteLine("1. Использовать заранее подготовленный массив целых чисел");
             Console.WriteLine("2. Ввести строки в массив вручную");
@@ -133,16 +130,16 @@ namespace Programm
                 {
                     case 1:
 
-                        string[] array = { "ABCD", "ABC", "AB", "WXYZ", "WXY", "WX", "EFGH", "EFG", "EF" };
+                        string[] array = { "!sdf", "deeer", "lwew", "rsdfg", "orewe", "Wsdf", " rewa", "osdf", "lo", "lol", "eeras", "Habrf" };
                         WorkWithStringArray workArray = new WorkWithStringArray(array);
 
-                        Console.Write("\nМассив для примера              : ");
+                        Console.Write("\nМассив для примера                       : ");
                         workArray.Show();
                         Console.WriteLine();
 
                         workArray.WorkWithArray();
 
-                        Console.Write("Отсортированный массив          : ");
+                        Console.Write("Первые символы строк в обратном порядке  : ");
                         workArray.Show();
 
                         break;
@@ -151,13 +148,14 @@ namespace Programm
                     case 2:
 
                         WorkWithStringArray userArray = new WorkWithStringArray();
-                        Console.Write("\nВаш массив            : ");
+                        Console.Write("\nВаш массив                               : ");
                         userArray.Show();
                         Console.WriteLine();
 
                         userArray.WorkWithArray();
 
-                        Console.Write("Отсортированный массив: ");
+                        Console.Write("Первые символы строк в обратном порядке  : ");
+
                         userArray.Show();
 
                         break;
