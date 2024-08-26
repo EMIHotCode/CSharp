@@ -7,6 +7,75 @@ using System.Threading;
 
 namespace Programm
 {
+    public class WorkWithTxtFile
+    {
+        private string name;
+        private string surname;    //фамилия 
+        private string patronymic; //отчество
+        public DateTime MyBirthday;
+        public DateTime NowDate;
+        public double[,] MassivDouble;
+        public int[,] MassivInt;
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Patronymic { get ; set ; }
+
+        public WorkWithTxtFile() 
+        {
+            Name = "Михаил";
+            Surname = "Ефремов";
+            Patronymic = "Иванович";
+            MyBirthday = new DateTime(1984, 12, 3);
+            MassivDouble = new double [,] 
+            {
+                { 1.23, 2.25, 3.3}, { 1.1324, 2.23, 3.78}, { 4.1, 5.2, 3}, { 4.05, 5.012210, 3.05}
+            };
+            MassivInt = new int[,]
+            {
+                { 1, 2, 3, 4}, { 5, 6, 7, 8}, { 9, 10, 11, 12}
+            };
+            NowDate = DateTime.Now;
+        }
+
+        public WorkWithTxtFile(string _name, string _surname, string _patronymic, DateTime _bitthday, double[,] _doubleArr, int[,] _intArr, DateTime _now)
+        {
+            Name = _name;
+            Surname = _surname;
+            Patronymic = _patronymic;
+            MyBirthday = _bitthday;
+            MassivDouble = _doubleArr;
+            MassivInt = _intArr;
+            NowDate = _now;
+        }
+
+        public void Show()
+        {
+            Console.WriteLine($"\nИмя - {Name} Фамилия - {Surname} Отчество - {Patronymic} ");
+            Console.WriteLine($"Дата рождения(чч.мм.гг) - {MyBirthday.Day}.{MyBirthday.Month}.{MyBirthday.Year}");
+            Console.WriteLine("\nМассив дробных чисел:");
+
+            for (int i = 0; i < MassivDouble.GetLength(0); i++)
+            {
+                for (int j = 0; j < MassivDouble.GetLength(1); j++)
+                {
+                    Console.Write($"{MassivDouble[i, j]} ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("\nМассив целых чисел:");
+
+            for (int i = 0; i < MassivInt.GetLength(0); i++)
+            {
+                for (int j = 0; j < MassivInt.GetLength(1); j++)
+                {
+                    Console.Write($"{MassivInt[i, j]} ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine($"\nДата сегодня - {NowDate.Day}.{NowDate.Month}.{NowDate.Year}");
+        }
+
+    }
     internal class Program
     {
         static void Menu()
@@ -25,25 +94,9 @@ namespace Programm
             bool exit = false;
             int choise;
 
-            string fileName, filePath = ".\\", FIO;
-            DateTime myBirthday = new DateTime(1984, 12, 3);
+            string fileName, filePath = ".\\", str;
 
-            double[,] massiv =
-            {
-                { 1.23, 2.25, 3.3},
-                { 1.1324, 2.23, 3.78},
-                { 4.1, 5.2, 3},
-                { 4.05, 5.012210, 3.05}
-            };
-
-            int[,] massivInt =
-            {
-                { 1, 2, 3, 4},
-                { 5, 6, 7, 8},
-                { 9, 10, 11, 12}
-            };
-
-
+            WorkWithTxtFile callObj = new WorkWithTxtFile();
             while (!exit)
             {
                 Menu();
@@ -89,27 +142,30 @@ namespace Programm
                         }
                     break;
 
-
                     case 2:
-                        string str = string.Empty;
+                        str = string.Empty;
 
                         if (filePath == ".\\")
                         {
                             Console.WriteLine("\nСоздайте файл Пункт Меню 1 преджде чем записывать в него информацию");
                             break;
                         }
+                        Console.WriteLine("\nИМЕЕМ ДАННЫЕ ОБЪЕКТА КЛАССА которые нужно записать в файл");
+                        callObj.Show();
+                        Console.WriteLine("\nЗАПИСЬ В ФАЙЛ НАЧАТА");
+
                         using ( FileStream fileStream = new FileStream(filePath, FileMode.Create)) 
                         {
                             using (StreamWriter writer = new StreamWriter(fileStream, Encoding.Unicode)) 
                             {
                                 Console.WriteLine("\nЗапись в файл ФИО и DateTime{дата рождения} -> Ефремов Михаил Иванович 12.03.1984");
-                                FIO = "Ефремов Михаил Иванович";
-                                str = FIO + " " + myBirthday.Month.ToString() + " " + myBirthday.Day.ToString() + " " + myBirthday.Year.ToString();
+                                str = callObj.Name + " " + callObj.Surname + " " + callObj.Patronymic + " " + callObj.MyBirthday.Day.ToString() + " " + callObj.MyBirthday.Month.ToString() + " " + callObj.MyBirthday.Year.ToString();
                                 writer.WriteLine(str);
                                 Thread.Sleep(1000);
+                                str = String.Empty;
 
-                                Console.WriteLine($"\nЗапись в файл число строк и столбцов массива дробных чисел -> {massiv.GetLength(0)} {massiv.GetLength(1)}");
-                                str = massiv.GetLength(0).ToString() + " " + massiv.GetLength(1).ToString();
+                                Console.WriteLine($"\nЗапись в файл число строк и столбцов массива дробных чисел -> {callObj.MassivDouble.GetLength(0)} {callObj.MassivDouble.GetLength(1)}");
+                                str = callObj.MassivDouble.GetLength(0).ToString() + " " + callObj.MassivDouble.GetLength(1).ToString();
                                 writer.WriteLine(str);
                                 Thread.Sleep(1000);
 
@@ -117,11 +173,11 @@ namespace Programm
                                 Console.WriteLine("\nЗапись в файл массива дробных чисел построчно ->");
                                 str = String.Empty;
 
-                                for (int i = 0; i < massiv.GetLength(0); i++)
+                                for (int i = 0; i < callObj.MassivDouble.GetLength(0); i++)
                                 {
-                                    for (int j = 0; j < massiv.GetLength(1); j++)
+                                    for (int j = 0; j < callObj.MassivDouble.GetLength(1); j++)
                                     {
-                                        str += (massiv[i, j] + " ");
+                                        str += (callObj.MassivDouble[i, j] + " ");
                                     }
                                     Console.WriteLine($"Строка {i+1} -> {str}");
                                     writer.WriteLine(str);
@@ -129,8 +185,8 @@ namespace Programm
                                     str = String.Empty;
                                 }
 
-                                Console.WriteLine($"\nЗапись в файл число строк и столбцов массива целых чисел -> {massivInt.GetLength(0)} {massivInt.GetLength(1)}");
-                                str = massivInt.GetLength(0).ToString() + " " + massivInt.GetLength(1).ToString();
+                                Console.WriteLine($"\nЗапись в файл число строк и столбцов массива целых чисел -> {callObj.MassivInt.GetLength(0)} {callObj.MassivInt.GetLength(1)}");
+                                str = callObj.MassivInt.GetLength(0).ToString() + " " + callObj.MassivInt.GetLength(1).ToString();
                                 writer.WriteLine(str);
                                 Thread.Sleep(1000);
 
@@ -138,22 +194,20 @@ namespace Programm
                                 Console.WriteLine("\nЗапись в файл массива целых чисел в одну строку ->");
                                 str = String.Empty;
 
-                                for (int i = 0; i < massivInt.GetLength(0); i++)
+                                for (int i = 0; i < callObj.MassivInt.GetLength(0); i++)
                                 {
-                                    for (int j = 0; j < massivInt.GetLength(1); j++)
+                                    for (int j = 0; j < callObj.MassivInt.GetLength(1); j++)
                                     {
-                                        str += (massivInt[i, j] + " ");
+                                        str += (callObj.MassivInt[i, j] + " ");
                                     }
                                 }
                                 Console.WriteLine($"Результат -> {str}");
                                 writer.WriteLine(str);
                                 Thread.Sleep(1000);
-                                str = String.Empty;
 
-                                DateTime nowDate = DateTime.Now;
                                 str = String.Empty;
-                                Console.WriteLine($"\nЗапись в файл DateTime(текущей даты) -> {nowDate.Day} {nowDate.Month} {nowDate.Year}\n");
-                                str = nowDate.Day.ToString() + " " + nowDate.Month.ToString() + " " + nowDate.Year.ToString();
+                                Console.WriteLine($"\nЗапись в файл DateTime(текущей даты) -> {callObj.NowDate.Day} {callObj.NowDate.Month} {callObj.NowDate.Year}\n");
+                                str = callObj.NowDate.Day.ToString() + " " + callObj.NowDate.Month.ToString() + " " + callObj.NowDate.Year.ToString();
                                 writer.WriteLine(str);
                                 Thread.Sleep(1000);
                             }
@@ -167,6 +221,7 @@ namespace Programm
                         }
                         break;
                     case 3:
+
                         if (filePath != ".\\")
                         {
                             FileInfo fileInf = new FileInfo(filePath);
@@ -174,6 +229,8 @@ namespace Programm
                             {
                                 using (StreamReader reader = new StreamReader(filePath, Encoding.Unicode))
                                 {
+                                    str = String.Empty;
+
                                     str = reader.ReadToEnd(); // чтение из файла
 
                                     Console.WriteLine($"{str}\n\nФайл успешно прочитан.");
@@ -188,6 +245,11 @@ namespace Programm
                             Console.WriteLine("\nОШИБКА. Укажите имя файла пункт Меню 1 который будем выводить на экран");
                         break;
                     case 4:
+                        string _name, _surname, _patronymic;
+                        DateTime _MyBirthday, _NowDate;
+                        double[,] doubleMassiv;
+                        int[,] intMassiv;
+
 
                         if (filePath != ".\\")
                         {
@@ -197,60 +259,52 @@ namespace Programm
                                 using (StreamReader reader = new StreamReader(filePath, Encoding.Unicode))
                                 {
                                     // восстановление из 1 строки
-                                    str = reader.ReadLine(); // чтение из файла
+                                    str = reader.ReadLine(); 
                                     string[] textArr = str.Split(" ,.:\t*\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                    FIO = textArr[0] + " " + textArr[1] + " " + textArr[2]; // Возвращаем имя фамилию и отчество в переменную FIO
-                                    DateTime testBirthday = new DateTime(Convert.ToInt32(textArr[5]), Convert.ToInt32(textArr[3]), Convert.ToInt32(textArr[4]));
-                                    Console.WriteLine($"\nФамилие Имя Отчество восстановлено в переменную =  {FIO}\n" +
-                                        $"Дата рождения восстановлена из файла в DateTime = {testBirthday.Month} {testBirthday.Day} {testBirthday.Year}");
+                                    _name = textArr[0].ToString();
+                                    _surname = textArr[1];
+                                    _patronymic = textArr[2];
+                                    _MyBirthday = new DateTime(Convert.ToInt32(textArr[5]), Convert.ToInt32(textArr[4]), Convert.ToInt32(textArr[3]));
 
                                     // восстановление из 2 строки
-                                    str = reader.ReadLine(); // чтение из файла
+                                    str = reader.ReadLine(); 
                                     textArr = str.Split(" ,.:\t*\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                    massiv = new double[Convert.ToInt32(textArr[0]), Convert.ToInt32(textArr[1])];
-                                    Console.WriteLine($"\nЧисло строк {Convert.ToInt32(textArr[0])} и стоблцов {Convert.ToInt32(textArr[1])}  массива дробных чисел восстановлено.");
+                                    doubleMassiv = new double[Convert.ToInt32(textArr[0]), Convert.ToInt32(textArr[1])];
 
                                     // восстановление из 3, 4, 5, 6 строки
-                                    Console.WriteLine($"\nВывод массива дробных чисел восстановленный из файла:");
-
-                                    for (int i = 0; i < massiv.GetLength(0); i++)
+                                    for (int i = 0; i < doubleMassiv.GetLength(0); i++)
                                     {
                                         str = reader.ReadLine();
                                         textArr = str.Split(" \n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                        for (int j = 0; j < massiv.GetLength(1); j++)
+                                        for (int j = 0; j < doubleMassiv.GetLength(1); j++)
                                         {
-                                            massiv[i, j] = Convert.ToDouble(textArr[j]);
-                                            Console.Write($"{massiv[i, j]} ");
+                                            doubleMassiv[i, j] = Convert.ToDouble(textArr[j]);
                                         }
-                                        Console.WriteLine();
                                     }
 
                                     // восстановление строк массива целых чисел 7, 8
-                                    str = reader.ReadLine(); // чтение из файла
+                                    str = reader.ReadLine(); 
                                     textArr = str.Split(" ,.:\t*\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                    massivInt = new int[Convert.ToInt32(textArr[0]), Convert.ToInt32(textArr[1])];
-                                    Console.WriteLine($"\nЧисло строк {Convert.ToInt32(textArr[0])} и стоблцов {Convert.ToInt32(textArr[1])}  массива целых чисел восстановлено.");
+                                    intMassiv = new int[Convert.ToInt32(textArr[0]), Convert.ToInt32(textArr[1])];
 
                                     // восстановление массива целых чисел 
-                                    Console.WriteLine($"\nВывод массива целых чисел восстановленный из файла:");
                                     str = reader.ReadLine();
                                     textArr = str.Split(" \n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                    for (int i = 0; i < massivInt.GetLength(0); i++)
+                                    for (int i = 0; i < intMassiv.GetLength(0); i++)
                                     {
                                         for (int j = 0, k = (i * 4); j < 4; j++, k++)
                                         {
-                                            massivInt[i, j] = Convert.ToInt32(textArr[k]);
-                                            Console.Write($"{massivInt[i, j]} ");
+                                            intMassiv[i, j] = Convert.ToInt32(textArr[k]);
                                         }
-                                        Console.WriteLine();
                                     }
 
-                                    // восстановление из 1 строки
-                                    str = reader.ReadLine(); // чтение из файла
+                                    // восстановление из последней строки строки
+                                    str = reader.ReadLine(); 
                                     textArr = str.Split(" ,.:\t*\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                    DateTime dateFromFile = new DateTime(Convert.ToInt32(textArr[2]), Convert.ToInt32(textArr[1]), Convert.ToInt32(textArr[0]));
-                                    Console.WriteLine($"\nДата восстановлена из файла в DateTime Год - {dateFromFile.Year} Месяц - {dateFromFile.Month} День - {dateFromFile.Day} ");
-
+                                    _NowDate = new DateTime(Convert.ToInt32(textArr[2]), Convert.ToInt32(textArr[1]), Convert.ToInt32(textArr[0]));
+                                    WorkWithTxtFile tempObj = new WorkWithTxtFile(_name, _surname, _patronymic, _MyBirthday, doubleMassiv, intMassiv, _NowDate);
+                                    Console.WriteLine($"\nВсе данные из файла успешно восстановлены в объект \"tempObj\" класса\n");
+                                    tempObj.Show();
                                 }
 
                             }
