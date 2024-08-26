@@ -1,19 +1,20 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Xml.Linq;
 
 
 namespace Programm
 {
     public class WorkWithTxtFile
     {
-        private string name;
-        private string surname;    //фамилия 
-        private string patronymic; //отчество
         public DateTime MyBirthday;
         public DateTime NowDate;
+        [Required]
+        [MaxLength(10)]
         public double[,] MassivDouble;
         public int[,] MassivInt;
         public string Name { get; set; }
@@ -76,8 +77,55 @@ namespace Programm
         }
 
     }
+
+
     internal class Program
     {
+        public static bool Validation (WorkWithTxtFile obj)
+        {
+            bool result = true;
+            Regex validWord = new Regex("^\\w*$");
+
+            if (!validWord.IsMatch(obj.Name))
+            {
+                Console.WriteLine("Неправильные значения Имя объекта");
+                result = false;
+            }
+            if (!validWord.IsMatch(obj.Surname))
+            {
+                Console.WriteLine("Неправильные значения Фамилия объекта");
+                result = false;
+            }
+            if (!validWord.IsMatch(obj.Patronymic))
+            {
+                Console.WriteLine("Неправильные значения Отчество объекта");
+                result = false;
+            }
+
+            if (obj.MyBirthday == null)
+            {
+                Console.WriteLine("Неправильные значения в Дате рождения");
+                result = false;
+            }
+
+            if (obj.NowDate == null)
+            {
+                Console.WriteLine("Неправильные значения в Сегодняшней дате");
+                result = false;
+            }
+            if (obj.MassivDouble == null)
+            {
+                Console.WriteLine("Double massive is null");
+                result = false;
+            }
+            if (obj.MassivInt == null)
+            {
+                Console.WriteLine("Int massive is null");
+                result = false;
+            }
+            return result;
+
+        }
         static void Menu()
         {
             Console.WriteLine($"\nПрограмма чтения и записи в файл \n\n");
@@ -96,13 +144,24 @@ namespace Programm
 
             string fileName, filePath = ".\\", str;
 
-            WorkWithTxtFile callObj = new WorkWithTxtFile();
+
             while (!exit)
             {
                 Menu();
 
                 Console.Write("Ваш выбор: ");
                 Int32.TryParse(Console.ReadLine(), out choise);
+
+                WorkWithTxtFile callObj = new WorkWithTxtFile();
+                if (!Validation(callObj))
+                {
+                    Console.WriteLine($"Объект не может быть создан");
+                    break;
+
+                }
+                else 
+                    Console.WriteLine($"Валидация : {Validation(callObj)}");
+
                 switch (choise)
                 {
                     case 1:
@@ -304,6 +363,14 @@ namespace Programm
                                     _NowDate = new DateTime(Convert.ToInt32(textArr[2]), Convert.ToInt32(textArr[1]), Convert.ToInt32(textArr[0]));
                                     WorkWithTxtFile tempObj = new WorkWithTxtFile(_name, _surname, _patronymic, _MyBirthday, doubleMassiv, intMassiv, _NowDate);
                                     Console.WriteLine($"\nВсе данные из файла успешно восстановлены в объект \"tempObj\" класса\n");
+                                    if (!Validation(callObj))
+                                    {
+                                        Console.WriteLine($"Объект не может быть создан");
+                                        break;
+
+                                    }
+                                    else
+                                        Console.WriteLine($"Валидация : {Validation(callObj)}");
                                     tempObj.Show();
                                 }
 
